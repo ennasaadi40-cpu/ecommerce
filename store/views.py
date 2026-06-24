@@ -117,6 +117,9 @@ def checkout(request):
         return redirect("store:cart")
 
     if request.method == "POST":
+        payment_method = request.POST.get("payment_method", "cod")
+        if payment_method not in dict(Order.PaymentMethod.choices):
+            payment_method = "cod"
         order = Order.objects.create(
             full_name=request.POST.get("full_name", ""),
             email=request.POST.get("email", ""),
@@ -124,6 +127,7 @@ def checkout(request):
             address=request.POST.get("address", ""),
             city=request.POST.get("city", ""),
             note=request.POST.get("note", ""),
+            payment_method=payment_method,
         )
         for item in cart:
             OrderItem.objects.create(

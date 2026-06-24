@@ -12,7 +12,20 @@
       <div class="field"><label>Address</label><input name="address" required></div>
       <div class="field"><label>City</label><input name="city" required></div>
       <div class="field"><label>Order note (optional)</label><textarea name="note" rows="3"></textarea></div>
-      <button type="submit" class="btn btn-block">Place Order</button>
+
+      <h4 style="margin:18px 0 8px;">Payment Method</h4>
+      <label class="pay-option">
+        <input type="radio" name="payment_method" value="cod" checked>
+        <span><strong>Cash on Delivery</strong><br>
+          <small style="color:var(--muted);">Pay with cash when your order arrives.</small></span>
+      </label>
+      <label class="pay-option pay-disabled">
+        <input type="radio" name="payment_method" value="card" disabled>
+        <span><strong>Credit / Debit Card</strong><br>
+          <small style="color:var(--muted);">Coming soon.</small></span>
+      </label>
+
+      <button type="submit" class="btn btn-block" style="margin-top:18px;">Place Order</button>
     </form>
     <div class="summary">
       <h4 style="margin-top:0;">Order Summary</h4>

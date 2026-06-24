@@ -203,3 +203,13 @@ img { max-width: 100%; display: block; }
   .mega { min-width: 320px; grid-template-columns: 1fr; }
   .header .container { flex-wrap: wrap; }
 }
+
+/* checkout payment options */
+.pay-option {
+  display: flex; gap: 12px; align-items: flex-start;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px; margin-bottom: 10px; cursor: pointer;
+}
+.pay-option input { margin-top: 3px; }
+.pay-option:has(input:checked) { border-color: var(--accent); box-shadow: var(--shadow); }
+.pay-disabled { opacity: .55; cursor: not-allowed; }

@@ -27,6 +27,7 @@ def send_order_notification(order):
         f"  Email:   {order.email}",
         f"  Phone:   {order.phone}",
         f"  Address: {order.address}, {order.city}",
+        f"  Payment: {order.get_payment_method_display()}",
     ]
     if order.note:
         lines.append(f"  Note:    {order.note}")

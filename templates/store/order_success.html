@@ -6,7 +6,8 @@
     <div style="font-size:48px;">✅</div>
     <h2 class="section-title">Thank you, {{ order.full_name }}!</h2>
     <p>Your order <strong>#{{ order.id }}</strong> has been placed.<br>
-       Total: <strong>${{ order.total }}</strong> — we'll contact you at {{ order.email }}.</p>
+       Total: <strong>${{ order.total }}</strong> — we'll contact you at {{ order.email }}.<br>
+       Payment: <strong>{{ order.get_payment_method_display }}</strong></p>
     <a href="{% url 'store:home' %}" class="btn">Continue Shopping</a>
   </div>
 </section>

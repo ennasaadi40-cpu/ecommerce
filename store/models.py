@@ -124,12 +124,19 @@ class Order(models.Model):
         DELIVERED = "delivered", "Delivered"
         CANCELLED = "cancelled", "Cancelled"
 
+    class PaymentMethod(models.TextChoices):
+        COD = "cod", "Cash on Delivery"
+        CARD = "card", "Card"
+
     full_name = models.CharField(max_length=150)
     email = models.EmailField()
     phone = models.CharField(max_length=30)
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
     note = models.TextField(blank=True)
+    payment_method = models.CharField(
+        max_length=10, choices=PaymentMethod.choices, default=PaymentMethod.COD
+    )
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
 
