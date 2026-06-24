@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # media storage (Cloudinary) — used only when CLOUDINARY_URL is set
+    "cloudinary_storage",
+    "cloudinary",
     # local apps
     "store",
 ]
@@ -125,8 +128,17 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Product/collection images: Cloudinary in production (persistent), local in dev.
+# Set CLOUDINARY_URL (from your Cloudinary dashboard) to enable cloud storage.
+CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL", "")
+_default_storage = (
+    "cloudinary_storage.storage.MediaCloudinaryStorage"
+    if CLOUDINARY_URL
+    else "django.core.files.storage.FileSystemStorage"
+)
+
 STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "default": {"BACKEND": _default_storage},
     "staticfiles": {
         # Compressed + cache-busted static files in production; plain in dev
         "BACKEND": (
