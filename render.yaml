@@ -1,4 +1,5 @@
 ﻿# Render Blueprint for RepairoX
+# Deploy: push to GitHub, then on Render: New > Blueprint > pick this repo.
 databases:
   - name: repairox-db
     plan: free
@@ -11,15 +12,15 @@ services:
     runtime: python
     plan: free
     branch: main
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py ensure_superuser"
     startCommand: "gunicorn qcp_store.wsgi:application"
     envVars:
       - key: SECRET_KEY
-        generateValue: true
+        generateValue: true          # Render generates a secure key automatically
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
-        value: ".onrender.com"
+        value: ".onrender.com"        # covers your-app.onrender.com
       - key: CSRF_TRUSTED_ORIGINS
         value: "https://*.onrender.com"
       - key: DATABASE_URL
