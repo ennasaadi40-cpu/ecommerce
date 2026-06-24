@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}{{ collection.name }} — RepairoX{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h2 class="section-title">{{ collection.brand.name }} — {{ collection.name }}</h2>
+
+  <div class="brand-row" style="margin-bottom:24px;">
+    <a href="{{ collection.get_absolute_url }}" class="brand-chip {% if not active_type %}is-active{% endif %}">All</a>
+    {% for value, label in part_types %}
+      <a href="?type={{ value }}" class="brand-chip {% if active_type == value %}is-active{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="grid">
+    {% for product in page_obj %}
+      <a href="{{ product.get_absolute_url }}" class="card">
+        <div class="card-img">
+          {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}<span class="ph">No image</span>{% endif %}
+        </div>
+        <div class="card-body">
+          <span class="card-cat">{{ product.get_part_type_display }}</span>
+          <div class="card-name">{{ product.name }}</div>
+          <div class="card-price">
+            ${{ product.price }}
+            {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
+          </div>
+          {% if not product.in_stock %}<span class="badge out">Out of stock</span>{% endif %}
+        </div>
+      </a>
+    {% empty %}
+      <p class="empty">No products in this collection yet.</p>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.has_other_pages %}
+    <div class="brand-row" style="margin-top:28px; justify-content:center;">
+      {% if page_obj.has_previous %}
+        <a class="brand-chip" href="?page={{ page_obj.previous_page_number }}{% if active_type %}&type={{ active_type }}{% endif %}">← Prev</a>
+      {% endif %}
+      <span class="brand-chip">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a class="brand-chip" href="?page={{ page_obj.next_page_number }}{% if active_type %}&type={{ active_type }}{% endif %}">Next →</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

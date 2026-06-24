@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Your Cart — RepairoX{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h2 class="section-title">Your Cart</h2>
+
+  {% if cart|length %}
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:30px;align-items:start;">
+    <table class="cart-table">
+      <thead>
+        <tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for item in cart %}
+        <tr>
+          <td style="display:flex;gap:12px;align-items:center;">
+            {% if item.product.image %}<img class="cart-thumb" src="{{ item.product.image.url }}">
+            {% else %}<div class="cart-thumb"></div>{% endif %}
+            <a href="{{ item.product.get_absolute_url }}">{{ item.product.name }}</a>
+          </td>
+          <td>${{ item.price }}</td>
+          <td>
+            <form action="{% url 'store:cart_update' item.product.id %}" method="post" style="display:flex;gap:6px;">
+              {% csrf_token %}
+              <input type="number" name="quantity" value="{{ item.quantity }}" min="0" class="qty" style="width:60px;">
+              <button class="btn btn-outline" type="submit">↻</button>
+            </form>
+          </td>
+          <td>${{ item.subtotal }}</td>
+          <td>
+            <a href="{% url 'store:cart_remove' item.product.id %}" class="btn btn-outline">✕</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <div class="row"><span>Items</span><span>{{ cart|length }}</span></div>
+      <div class="row"><span>Shipping</span><span>Calculated at checkout</span></div>
+      <div class="row total"><span>Subtotal</span><span>${{ cart.total }}</span></div>
+      <a href="{% url 'store:checkout' %}" class="btn btn-block" style="margin-top:16px;">Check Out</a>
+      <a href="{% url 'store:home' %}" class="btn btn-outline btn-block" style="margin-top:10px;">Continue Shopping</a>
+    </div>
+  </div>
+  {% else %}
+    <div class="empty">
+      <p>Your cart is empty.</p>
+      <a href="{% url 'store:home' %}" class="btn">Continue Shopping</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

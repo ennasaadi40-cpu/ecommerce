@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero-fallback">
+    <h1>{{ site.hero_title|default:site.store_name }}</h1>
+    {% if site.hero_subtitle %}<p>{{ site.hero_subtitle }}</p>{% endif %}
+    <a href="#products" class="btn">Browse Products</a>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <h2 class="section-title">Featured Products</h2>
+  <div class="grid">
+    {% for product in featured %}
+      <a href="{{ product.get_absolute_url }}" class="card">
+        <div class="card-img">
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}
+            <span class="ph">No image</span>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <span class="card-cat">{{ product.collection.name }}</span>
+          <div class="card-name">{{ product.name }}</div>
+          <div class="card-price">
+            ${{ product.price }}
+            {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
+          </div>
+        </div>
+      </a>
+    {% empty %}
+      <p class="empty">
+        No products yet.<br>
+        Add brands, collections and products from the
+        <a href="{% url 'admin:index' %}">admin panel</a>.
+      </p>
+    {% endfor %}
+  </div>
+</section>
+
+{% if brands %}
+<section class="section">
+  <h2 class="section-title">Shop by Brand</h2>
+  <div class="brand-row">
+    {% for brand in brands %}
+      <a href="{% url 'store:brand' brand.slug %}" class="brand-chip">{{ brand.name }}</a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

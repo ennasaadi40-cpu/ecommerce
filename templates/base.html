@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}RepairoX{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  {% if site.announcement %}
+  <div class="announce">{{ site.announcement }}</div>
+  {% endif %}
+
+  <div class="topbar">
+    <div class="container">
+      <span>
+        {% if site.phone %}📞 {{ site.phone }}{% endif %}
+        {% if site.phone and site.hours %} &nbsp;|&nbsp; {% endif %}
+        {% if site.hours %}{{ site.hours }}{% endif %}
+      </span>
+      <a href="{% url 'admin:index' %}">Log in</a>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container">
+      <a href="{% url 'store:home' %}" class="brand-logo" aria-label="RepairoX Mobile Parts">
+        <img src="{% static 'img/logo.png' %}" alt="RepairoX Mobile Parts">
+      </a>
+      <form class="search-form" action="{% url 'store:search' %}" method="get">
+        <input type="text" name="q" placeholder="Search parts, models, SKU…" value="{{ query|default:'' }}">
+        <button type="submit">Search</button>
+      </form>
+      <div class="header-actions">
+        <a href="{% url 'store:cart' %}" class="cart-pill">
+          🛒 Cart <span class="count">{{ cart_count }}</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <div class="container">
+      <ul class="nav-list">
+        {% for brand in nav_brands %}
+          <li class="nav-item">
+            <a href="{% url 'store:brand' brand.slug %}">{{ brand.name }}</a>
+            {% if brand.collections.all %}
+              <div class="mega">
+                {% for col in brand.collections.all %}
+                  {% if not col.parent %}
+                    <div class="mega-col">
+                      <h4><a href="{% url 'store:collection' col.slug %}">{{ col.name }}</a></h4>
+                      {% for child in col.children.all %}
+                        <a href="{% url 'store:collection' child.slug %}">{{ child.name }}</a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="flash {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        {% if site.about_text %}
+        <div>
+          <h4>About {{ site.store_name }}</h4>
+          <p>{{ site.about_text }}</p>
+        </div>
+        {% endif %}
+        <div>
+          <h4>Shop</h4>
+          {% for brand in nav_brands %}
+            <a href="{% url 'store:brand' brand.slug %}">{{ brand.name }}</a>
+          {% empty %}
+            <span style="color:#9aa0c0;">No brands added yet.</span>
+          {% endfor %}
+        </div>
+        {% if site.phone or site.email or site.address %}
+        <div>
+          <h4>Contact</h4>
+          {% if site.phone %}<p>📞 {{ site.phone }}</p>{% endif %}
+          {% if site.email %}<p>✉️ {{ site.email }}</p>{% endif %}
+          {% if site.address %}<p>📍 {{ site.address }}</p>{% endif %}
+        </div>
+        {% endif %}
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026, {{ site.store_name }}</span>
+        <span>Visa · Mastercard · Apple Pay · Google Pay · Amex</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

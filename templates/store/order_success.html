@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — RepairoX{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="empty">
+    <div style="font-size:48px;">✅</div>
+    <h2 class="section-title">Thank you, {{ order.full_name }}!</h2>
+    <p>Your order <strong>#{{ order.id }}</strong> has been placed.<br>
+       Total: <strong>${{ order.total }}</strong> — we'll contact you at {{ order.email }}.</p>
+    <a href="{% url 'store:home' %}" class="btn">Continue Shopping</a>
+  </div>
+</section>
+{% endblock %}

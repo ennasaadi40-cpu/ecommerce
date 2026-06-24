@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ brand.name }} — RepairoX{% endblock %}
+
+{% block content %}
+<section class="section">
+  <h2 class="section-title">{{ brand.name }}</h2>
+  <div class="grid">
+    {% for col in collections %}
+      <a href="{{ col.get_absolute_url }}" class="card">
+        <div class="card-img">
+          {% if col.image %}<img src="{{ col.image.url }}" alt="{{ col.name }}">
+          {% else %}<span class="ph">{{ col.name }}</span>{% endif %}
+        </div>
+        <div class="card-body">
+          <div class="card-name">{{ col.name }}</div>
+          <span class="card-cat">{{ col.products.count }} products</span>
+        </div>
+      </a>
+    {% empty %}
+      <p class="empty">No collections yet for {{ brand.name }}.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
