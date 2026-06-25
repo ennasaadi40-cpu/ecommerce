@@ -33,11 +33,6 @@ def collection_detail(request, slug):
     collection = get_object_or_404(Collection, slug=slug, is_active=True)
     products = collection.products.filter(is_active=True)
 
-    # optional filtering by part type
-    part_type = request.GET.get("type")
-    if part_type:
-        products = products.filter(part_type=part_type)
-
     paginator = Paginator(products, 12)
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
@@ -45,8 +40,6 @@ def collection_detail(request, slug):
     return render(request, "store/collection.html", {
         "collection": collection,
         "page_obj": page_obj,
-        "part_types": Product.PartType.choices,
-        "active_type": part_type,
     })
 
 

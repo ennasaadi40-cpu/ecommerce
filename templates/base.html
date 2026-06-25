@@ -43,6 +43,9 @@
 
   <nav class="nav">
     <div class="container">
+      <button class="drawer-toggle" type="button" aria-label="Browse devices" onclick="openDrawer()">
+        <span class="bars">☰</span> Browse devices
+      </button>
       <ul class="nav-list">
         {% for brand in nav_brands %}
           <li class="nav-item">
@@ -66,6 +69,46 @@
       </ul>
     </div>
   </nav>
+
+  <!-- Slide-in device browser (Brand → Series → Model) -->
+  <div class="drawer-overlay" onclick="closeDrawer()"></div>
+  <aside class="drawer" aria-label="Device browser">
+    <div class="drawer-head">
+      <span>Browse devices</span>
+      <button class="drawer-close" type="button" aria-label="Close" onclick="closeDrawer()">✕</button>
+    </div>
+    <ul class="acc">
+      {% for brand in nav_brands %}
+        <li>
+          <button class="acc-row acc-l1" type="button" onclick="toggleAcc(this)">
+            {{ brand.name }}<span class="chev">›</span>
+          </button>
+          <div class="acc-panel">
+            <a class="acc-row acc-all" href="{% url 'store:brand' brand.slug %}">All {{ brand.name }}</a>
+            {% for col in brand.collections.all %}
+              {% if not col.parent %}
+                {% if col.children.all %}
+                  <button class="acc-row acc-l2" type="button" onclick="toggleAcc(this)">
+                    {{ col.name }}<span class="chev">›</span>
+                  </button>
+                  <div class="acc-panel">
+                    <a class="acc-row acc-l3" href="{% url 'store:collection' col.slug %}">All {{ col.name }}</a>
+                    {% for child in col.children.all %}
+                      <a class="acc-row acc-l3" href="{% url 'store:collection' child.slug %}">{{ child.name }}</a>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <a class="acc-row acc-l2" href="{% url 'store:collection' col.slug %}">{{ col.name }}</a>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </li>
+      {% empty %}
+        <p class="acc-empty">No devices added yet. Add brands and models in the admin.</p>
+      {% endfor %}
+    </ul>
+  </aside>
 
   <main class="container">
     {% if messages %}
@@ -108,6 +151,27 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    function openDrawer(){
+      document.querySelector('.drawer').classList.add('is-open');
+      document.querySelector('.drawer-overlay').classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDrawer(){
+      document.querySelector('.drawer').classList.remove('is-open');
+      document.querySelector('.drawer-overlay').classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    function toggleAcc(btn){
+      var panel = btn.nextElementSibling;
+      var open = panel.classList.toggle('open');
+      btn.classList.toggle('expanded', open);
+    }
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape') closeDrawer();
+    });
+  </script>
 
 </body>
 </html>
