@@ -3,40 +3,72 @@
 
 {% block content %}
 <section class="section">
-  <h2 class="section-title">{{ collection.brand.name }} — {{ collection.name }}</h2>
-
-  <div class="grid">
-    {% for product in page_obj %}
-      <a href="{{ product.get_absolute_url }}" class="card">
-        <div class="card-img">
-          {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
-          {% else %}<span class="ph">No image</span>{% endif %}
-        </div>
-        <div class="card-body">
-          <span class="card-cat">{{ product.get_part_type_display }}</span>
-          <div class="card-name">{{ product.name }}</div>
-          <div class="card-price">
-            ${{ product.price }}
-            {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
-          </div>
-          {% if not product.in_stock %}<span class="badge out">Out of stock</span>{% endif %}
-        </div>
-      </a>
-    {% empty %}
-      <p class="empty">No products in this collection yet.</p>
-    {% endfor %}
+  <!-- breadcrumb: shows the path and lets you go back up -->
+  <div class="crumbs">
+    <a href="{% url 'store:home' %}">Home</a>
+    <span>›</span>
+    <a href="{% url 'store:brand' collection.brand.slug %}">{{ collection.brand.name }}</a>
+    {% if collection.parent %}
+      <span>›</span>
+      <a href="{{ collection.parent.get_absolute_url }}">{{ collection.parent.name }}</a>
+    {% endif %}
+    <span>›</span>
+    <strong>{{ collection.name }}</strong>
   </div>
 
-  {% if page_obj.has_other_pages %}
-    <div class="brand-row" style="margin-top:28px; justify-content:center;">
-      {% if page_obj.has_previous %}
-        <a class="brand-chip" href="?page={{ page_obj.previous_page_number }}">← Prev</a>
-      {% endif %}
-      <span class="brand-chip">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-      {% if page_obj.has_next %}
-        <a class="brand-chip" href="?page={{ page_obj.next_page_number }}">Next →</a>
-      {% endif %}
+  <h2 class="section-title">{{ collection.name }}</h2>
+
+  {% if children %}
+    <!-- This is a category (e.g. iPhone): show its models to drill into -->
+    <div class="grid">
+      {% for model in children %}
+        <a href="{{ model.get_absolute_url }}" class="card">
+          <div class="card-img">
+            {% if model.image %}<img src="{{ model.image.url }}" alt="{{ model.name }}">
+            {% else %}<span class="ph">{{ model.name }}</span>{% endif %}
+          </div>
+          <div class="card-body">
+            <div class="card-name">{{ model.name }}</div>
+            <span class="card-cat">{{ model.products.count }} parts</span>
+          </div>
+        </a>
+      {% endfor %}
     </div>
+  {% else %}
+    <!-- Leaf model (e.g. iPhone 17 Pro Max): show its parts -->
+    <div class="grid">
+      {% for product in page_obj %}
+        <a href="{{ product.get_absolute_url }}" class="card">
+          <div class="card-img">
+            {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}<span class="ph">No image</span>{% endif %}
+          </div>
+          <div class="card-body">
+            <span class="card-cat">{{ product.get_part_type_display }}</span>
+            <div class="card-name">{{ product.name }}</div>
+            <div class="card-price">
+              ${{ product.price }}
+              {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
+            </div>
+            {% if not product.in_stock %}<span class="badge out">Out of stock</span>{% endif %}
+          </div>
+        </a>
+      {% empty %}
+        <p class="empty">No parts added for this model yet.</p>
+      {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+      <div class="brand-row" style="margin-top:28px; justify-content:center;">
+        {% if page_obj.has_previous %}
+          <a class="brand-chip" href="?page={{ page_obj.previous_page_number }}">← Prev</a>
+        {% endif %}
+        <span class="brand-chip">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+          <a class="brand-chip" href="?page={{ page_obj.next_page_number }}">Next →</a>
+        {% endif %}
+      </div>
+    {% endif %}
   {% endif %}
 </section>
 {% endblock %}

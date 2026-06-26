@@ -31,8 +31,17 @@ def brand_detail(request, slug):
 def collection_detail(request, slug):
     """List products inside a collection (a device model or part group)."""
     collection = get_object_or_404(Collection, slug=slug, is_active=True)
-    products = collection.products.filter(is_active=True)
+    children = collection.children.filter(is_active=True)
 
+    if children.exists():
+        # This is a category/series (e.g. iPhone) → show its models to drill into.
+        return render(request, "store/collection.html", {
+            "collection": collection,
+            "children": children,
+        })
+
+    # Leaf model (e.g. iPhone 17 Pro Max) → show its parts.
+    products = collection.products.filter(is_active=True)
     paginator = Paginator(products, 12)
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)

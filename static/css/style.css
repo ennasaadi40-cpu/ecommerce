@@ -285,3 +285,9 @@ img { max-width: 100%; display: block; }
   .pd{ grid-template-columns:1fr; gap:24px; }
   .pd-info h1{ font-size:22px; }
 }
+
+/* breadcrumb for drill-down navigation */
+.crumbs{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:14px; color:var(--muted); margin-bottom:14px; }
+.crumbs a{ color:var(--navy); text-decoration:none; }
+.crumbs a:hover{ color:var(--accent); }
+.crumbs strong{ color:var(--ink); }
