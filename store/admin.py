@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Brand, Collection, Product, Order, OrderItem, SiteConfig
+from .models import Brand, Collection, Product, ProductImage, Order, OrderItem, SiteConfig
 
 
 @admin.register(SiteConfig)
@@ -28,6 +28,11 @@ class CollectionAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 3   # show 3 empty image slots by default
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "sku", "collection", "part_type", "price", "stock", "is_active")
@@ -35,6 +40,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ("price", "stock", "is_active")
     search_fields = ("name", "sku")
     prepopulated_fields = {"slug": ("name",)}
+    inlines = [ProductImageInline]
 
 
 class OrderItemInline(admin.TabularInline):

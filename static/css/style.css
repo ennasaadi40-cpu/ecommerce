@@ -252,3 +252,36 @@ img { max-width: 100%; display: block; }
 .pay-option input { margin-top: 3px; }
 .pay-option:has(input:checked) { border-color: var(--accent); box-shadow: var(--shadow); }
 .pay-disabled { opacity: .55; cursor: not-allowed; }
+
+/* ===== Product detail with image gallery (reference-style) ===== */
+.pd{ display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; padding:28px 0; }
+.pd-gallery{ display:flex; flex-direction:column; gap:14px; }
+.pd-main{
+  background:var(--soft); border:1px solid var(--line); border-radius:14px;
+  aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.pd-main img{ width:100%; height:100%; object-fit:contain; }
+.pd-thumbs{ display:flex; gap:10px; flex-wrap:wrap; }
+.pd-thumb{
+  width:72px; height:72px; border:2px solid var(--line); border-radius:10px;
+  background:#fff; cursor:pointer; padding:4px; overflow:hidden;
+}
+.pd-thumb.is-active{ border-color:var(--accent); }
+.pd-thumb img{ width:100%; height:100%; object-fit:contain; }
+
+.pd-info h1{ font-size:26px; color:var(--ink); margin:6px 0 12px; line-height:1.25; }
+.pd-badge{ display:inline-block; font-size:12px; font-weight:700; padding:4px 12px; border-radius:999px; margin-bottom:14px; }
+.pd-badge.in{ background:#ecfdf5; color:#065f46; }
+.pd-badge.out{ background:#374151; color:#fff; }
+.pd-info .price{ font-size:30px; font-weight:800; color:var(--ink); display:flex; align-items:baseline; gap:10px; }
+.pd-info .price .was{ font-size:18px; color:var(--muted); text-decoration:line-through; font-weight:500; }
+.pd-info .price .cur{ font-size:16px; color:var(--muted); font-weight:600; }
+.pd-info .meta{ color:var(--muted); font-size:14px; margin:12px 0; }
+.pd-desc{ color:#374151; line-height:1.7; margin:14px 0; }
+.pd-buy{ display:flex; gap:12px; align-items:center; margin-top:20px; }
+.btn-soldout{ background:#9fd9c6 !important; cursor:not-allowed; opacity:1; }
+
+@media (max-width:760px){
+  .pd{ grid-template-columns:1fr; gap:24px; }
+  .pd-info h1{ font-size:22px; }
+}

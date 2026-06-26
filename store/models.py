@@ -113,6 +113,32 @@ class Product(models.Model):
     def on_sale(self):
         return self.compare_at_price and self.compare_at_price > self.price
 
+    @property
+    def gallery(self):
+        """Primary image first, then any extra images — for the product page."""
+        imgs = []
+        if self.image:
+            imgs.append(self.image.url)
+        for extra in self.images.all():
+            if extra.image:
+                imgs.append(extra.image.url)
+        return imgs
+
+
+class ProductImage(models.Model):
+    """Extra photos for a product (gallery)."""
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="images"
+    )
+    image = models.ImageField(upload_to="products/")
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"Image for {self.product.name}"
+
 
 class Order(models.Model):
     """A customer order created at checkout (cart -> order)."""

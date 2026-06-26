@@ -3,33 +3,60 @@
 
 {% block content %}
 <div class="pd">
-  <div class="pd-img">
-    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
-    {% else %}<span class="ph">No image</span>{% endif %}
+  <!-- Gallery: big image + thumbnails (like the reference site) -->
+  <div class="pd-gallery">
+    {% with imgs=product.gallery %}
+      {% if imgs %}
+        <div class="pd-main">
+          <img id="pdMainImg" src="{{ imgs.0 }}" alt="{{ product.name }}">
+        </div>
+        {% if imgs|length > 1 %}
+          <div class="pd-thumbs">
+            {% for url in imgs %}
+              <button type="button" class="pd-thumb {% if forloop.first %}is-active{% endif %}"
+                      onclick="pdSwap(this, '{{ url }}')">
+                <img src="{{ url }}" alt="{{ product.name }} {{ forloop.counter }}">
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="pd-main"><span class="ph">No image</span></div>
+      {% endif %}
+    {% endwith %}
   </div>
-  <div>
+
+  <!-- Product info -->
+  <div class="pd-info">
     <span class="card-cat">{{ product.collection.brand.name }} / {{ product.collection.name }}</span>
     <h1>{{ product.name }}</h1>
-    <div class="price">
-      ${{ product.price }}
-      {% if product.on_sale %}<span class="card-price"><span class="was">${{ product.compare_at_price }}</span></span>{% endif %}
-    </div>
-    <div class="meta">
-      SKU: {{ product.sku }} &nbsp;•&nbsp; {{ product.get_part_type_display }} &nbsp;•&nbsp;
-      {% if product.in_stock %}<span style="color:#059669;font-weight:600;">In stock ({{ product.stock }})</span>
-      {% else %}<span style="color:#9ca3af;">Out of stock</span>{% endif %}
-    </div>
-
-    {% if product.description %}<p>{{ product.description }}</p>{% endif %}
 
     {% if product.in_stock %}
-      <form action="{% url 'store:cart_add' product.id %}" method="post" style="display:flex;gap:12px;align-items:center;margin-top:18px;">
+      <span class="pd-badge in">In stock</span>
+    {% else %}
+      <span class="pd-badge out">Sold out</span>
+    {% endif %}
+
+    <div class="price">
+      ${{ product.price }}
+      {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
+      <span class="cur">USD</span>
+    </div>
+
+    <div class="meta">
+      SKU: {{ product.sku }} &nbsp;•&nbsp; {{ product.get_part_type_display }}
+    </div>
+
+    {% if product.description %}<p class="pd-desc">{{ product.description }}</p>{% endif %}
+
+    {% if product.in_stock %}
+      <form action="{% url 'store:cart_add' product.id %}" method="post" class="pd-buy">
         {% csrf_token %}
         <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" class="qty">
         <button type="submit" class="btn">Add to Cart</button>
       </form>
     {% else %}
-      <button class="btn" disabled style="opacity:.5;cursor:not-allowed;">Out of Stock</button>
+      <button class="btn btn-soldout" disabled>Sold out</button>
     {% endif %}
   </div>
 </div>
@@ -53,4 +80,12 @@
   </div>
 </section>
 {% endif %}
+
+<script>
+  function pdSwap(btn, url){
+    document.getElementById('pdMainImg').src = url;
+    document.querySelectorAll('.pd-thumb').forEach(function(t){ t.classList.remove('is-active'); });
+    btn.classList.add('is-active');
+  }
+</script>
 {% endblock %}
