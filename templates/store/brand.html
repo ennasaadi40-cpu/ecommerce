@@ -3,22 +3,23 @@
 
 {% block content %}
 <section class="section">
+  <div class="crumbs">
+    <a href="{% url 'store:home' %}">Home</a>
+    <span>›</span>
+    <strong>{{ brand.name }}</strong>
+  </div>
+
   <h2 class="section-title">{{ brand.name }}</h2>
-  <div class="grid">
+
+  <ul class="cat-list">
     {% for col in collections %}
-      <a href="{{ col.get_absolute_url }}" class="card">
-        <div class="card-img">
-          {% if col.image %}<img src="{{ col.image.url }}" alt="{{ col.name }}">
-          {% else %}<span class="ph">{{ col.name }}</span>{% endif %}
-        </div>
-        <div class="card-body">
-          <div class="card-name">{{ col.name }}</div>
-          <span class="card-cat">{{ col.products.count }} products</span>
-        </div>
+      <a href="{{ col.get_absolute_url }}" class="cat-row">
+        <span class="cat-name">{{ col.name }}</span>
+        <span class="cat-arrow">›</span>
       </a>
     {% empty %}
-      <p class="empty">No collections yet for {{ brand.name }}.</p>
+      <p class="empty">No categories yet for {{ brand.name }}.</p>
     {% endfor %}
-  </div>
+  </ul>
 </section>
 {% endblock %}

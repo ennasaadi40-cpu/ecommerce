@@ -19,21 +19,16 @@
   <h2 class="section-title">{{ collection.name }}</h2>
 
   {% if children %}
-    <!-- This is a category (e.g. iPhone): show its models to drill into -->
-    <div class="grid">
+    <!-- This is a category (e.g. iPhone): show its models as a simple list -->
+    <ul class="cat-list">
       {% for model in children %}
-        <a href="{{ model.get_absolute_url }}" class="card">
-          <div class="card-img">
-            {% if model.image %}<img src="{{ model.image.url }}" alt="{{ model.name }}">
-            {% else %}<span class="ph">{{ model.name }}</span>{% endif %}
-          </div>
-          <div class="card-body">
-            <div class="card-name">{{ model.name }}</div>
-            <span class="card-cat">{{ model.products.count }} parts</span>
-          </div>
+        <a href="{{ model.get_absolute_url }}" class="cat-row">
+          <span class="cat-name">{{ model.name }}</span>
+          <span class="cat-meta">{{ model.products.count }} parts</span>
+          <span class="cat-arrow">›</span>
         </a>
       {% endfor %}
-    </div>
+    </ul>
   {% else %}
     <!-- Leaf model (e.g. iPhone 17 Pro Max): show its parts -->
     <div class="grid">

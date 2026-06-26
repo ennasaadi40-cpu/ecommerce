@@ -291,3 +291,17 @@ img { max-width: 100%; display: block; }
 .crumbs a{ color:var(--navy); text-decoration:none; }
 .crumbs a:hover{ color:var(--accent); }
 .crumbs strong{ color:var(--ink); }
+
+/* ===== Simple category / model list (drill-down) ===== */
+.cat-list{ list-style:none; margin:0; padding:0; max-width:640px; border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.cat-row{
+  display:flex; align-items:center; gap:12px;
+  padding:16px 20px; border-bottom:1px solid var(--line);
+  text-decoration:none; color:var(--ink); background:#fff;
+  font-size:16px; font-weight:600; transition:background .15s ease;
+}
+.cat-row:last-child{ border-bottom:none; }
+.cat-row:hover{ background:var(--soft); }
+.cat-name{ flex:1; color:var(--navy); }
+.cat-meta{ font-size:13px; color:var(--muted); font-weight:500; }
+.cat-arrow{ color:var(--accent); font-size:22px; font-weight:700; }
