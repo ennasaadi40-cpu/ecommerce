@@ -1,0 +1,29 @@
+{% comment %}Reusable product card with a direct Add-to-cart button.{% endcomment %}
+<div class="card">
+  <a href="{{ product.get_absolute_url }}" class="card-link">
+    <div class="card-img">
+      {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}<span class="ph">No image</span>{% endif %}
+      {% if not product.in_stock %}<span class="card-soldout">Sold out</span>{% endif %}
+    </div>
+    <div class="card-body">
+      <span class="card-cat">{{ product.collection.name }}</span>
+      <div class="card-name">{{ product.name }}</div>
+      <div class="card-price">
+        ${{ product.price }}
+        {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
+      </div>
+    </div>
+  </a>
+  {% if product.in_stock %}
+    <form action="{% url 'store:cart_add' product.id %}" method="post" class="card-cart">
+      {% csrf_token %}
+      <input type="hidden" name="quantity" value="1">
+      <button type="submit" class="btn-cart">
+        <span class="cart-ico">🛒</span> Add to cart
+      </button>
+    </form>
+  {% else %}
+    <button class="btn-cart btn-cart-disabled" disabled>Sold out</button>
+  {% endif %}
+</div>

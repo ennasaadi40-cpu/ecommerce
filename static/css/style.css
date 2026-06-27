@@ -3,11 +3,11 @@
   --ink: #1a1a1a;
   --muted: #6b7280;
   --line: #e5e7eb;
-  --navy: #4169E1;         /* RepairoX brand royal blue */
-  --navy-dark: #2f4fc4;
+  --navy: #1a2b5c;         /* RepairoX brand dark navy */
+  --navy-dark: #11193b;
   --accent: #E8531E;       /* RepairoX brand orange */
   --accent-dark: #c9430f;
-  --dark: #4169E1;         /* header/footer use brand royal blue */
+  --dark: #1a2b5c;         /* header/footer use brand dark navy */
   --soft: #f5f6fb;
   --radius: 10px;
   --shadow: 0 1px 3px rgba(0,0,0,.08), 0 6px 16px rgba(40,38,122,.06);
@@ -157,7 +157,7 @@ img { max-width: 100%; display: block; }
 .hero { margin: 22px 0; }
 .hero img { width: 100%; border-radius: var(--radius); object-fit: cover; }
 .hero-fallback {
-  background: linear-gradient(120deg, var(--navy), #5b7dec 70%, var(--accent) 160%);
+  background: linear-gradient(120deg, var(--navy), #2c4585 70%, var(--accent) 160%);
   color: #fff; border-radius: var(--radius); padding: 64px 40px;
 }
 .hero-fallback h1 { margin: 0 0 10px; font-size: 38px; }
@@ -351,4 +351,21 @@ img { max-width: 100%; display: block; }
 .card-soldout{
   position:absolute; top:10px; left:10px; background:#374151; color:#fff;
   font-size:11px; font-weight:700; padding:3px 10px; border-radius:6px;
+}
+
+/* ===== Product card with direct Add-to-cart button ===== */
+.card{ display:flex; flex-direction:column; }
+.card-link{ text-decoration:none; color:inherit; display:block; }
+.card-cart{ margin:0; padding:0 14px 14px; }
+.btn-cart{
+  width:100%; display:flex; align-items:center; justify-content:center; gap:8px;
+  background:var(--accent); color:#fff; border:none; border-radius:8px;
+  padding:11px 14px; font-size:14.5px; font-weight:700; cursor:pointer;
+  font-family:inherit; transition:filter .15s ease;
+}
+.btn-cart:hover{ filter:brightness(1.06); }
+.btn-cart .cart-ico{ font-size:16px; }
+.btn-cart-disabled{
+  margin:0 14px 14px; width:calc(100% - 28px);
+  background:#cfd3e0; color:#fff; cursor:not-allowed;
 }
