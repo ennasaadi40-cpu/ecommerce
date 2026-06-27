@@ -91,22 +91,20 @@ img { max-width: 100%; display: block; }
 .dropdown {
   position: absolute; top: 100%; left: 0; background: #fff;
   border: 1px solid var(--line); box-shadow: var(--shadow);
-  border-radius: 0 0 10px 10px; padding: 16px 18px;
-  display: none; min-width: 560px; max-width: 760px; z-index: 60;
-  grid-template-columns: repeat(3, 1fr); gap: 6px 24px;
+  border-radius: 0 0 10px 10px; padding: 8px 0;
+  display: none; min-width: 240px; z-index: 60;
 }
-.nav-item:hover .dropdown { display: grid; }
-.dropdown-group { break-inside: avoid; margin-bottom: 8px; }
-.dropdown-head {
-  display: block; font-size: 13px; font-weight: 800; color: var(--navy);
-  text-transform: uppercase; letter-spacing: .04em; padding: 4px 0 6px;
-  border-bottom: 2px solid var(--soft); margin-bottom: 4px; text-decoration: none;
+.nav-item:hover .dropdown { display: block; }
+.dropdown-cat {
+  display: block; padding: 11px 20px; font-size: 15px; font-weight: 600;
+  color: var(--navy); text-decoration: none; white-space: nowrap;
 }
-.dropdown-head:hover { color: var(--accent); }
-.dropdown-item {
-  display: block; padding: 5px 0; font-size: 14px; color: #374151; text-decoration: none;
-}
-.dropdown-item:hover { color: var(--accent); }
+.dropdown-cat:hover { background: var(--soft); color: var(--accent); }
+
+
+
+
+
 
 /* mobile hamburger toggle */
 .nav-mobile-toggle {
