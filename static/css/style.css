@@ -329,10 +329,13 @@ img { max-width: 100%; display: block; }
 
 @media (max-width: 860px) {
   .dropdown-cat.has-sub { flex-direction: column; align-items: stretch; }
-  .dropdown-cat.has-sub .sub-caret { display: none; }
-  .submenu {
-    position: static; display: block; border: none; box-shadow: none;
+  .dropdown-cat.has-sub .sub-caret { display: inline; align-self: flex-end; margin-top: -28px; }
+  .dropdown-cat.has-sub .submenu {
+    position: static; display: none; border: none; box-shadow: none;
     border-radius: 0; padding: 0 0 6px 16px; min-width: 0; background: #fcfcfe;
   }
+  .dropdown-cat.has-sub.open .submenu { display: block; }  /* tap category to reveal models */
+  .dropdown-cat.has-sub:hover .submenu { display: none; }   /* disable hover on mobile */
+  .dropdown-cat.has-sub.open:hover .submenu { display: block; }
   .submenu-item { padding: 9px 16px; }
 }
