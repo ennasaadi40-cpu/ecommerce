@@ -57,7 +57,19 @@
               <div class="dropdown">
                 {% for col in brand.collections.all %}
                   {% if not col.parent %}
-                    <a class="dropdown-cat" href="{% url 'store:collection' col.slug %}">{{ col.name }}</a>
+                    {% if col.children.all %}
+                      <div class="dropdown-cat has-sub">
+                        <a href="{% url 'store:collection' col.slug %}">{{ col.name }}</a>
+                        <span class="sub-caret">›</span>
+                        <div class="submenu">
+                          {% for child in col.children.all %}
+                            <a class="submenu-item" href="{% url 'store:collection' child.slug %}">{{ child.name }}</a>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    {% else %}
+                      <a class="dropdown-cat" href="{% url 'store:collection' col.slug %}">{{ col.name }}</a>
+                    {% endif %}
                   {% endif %}
                 {% endfor %}
               </div>
