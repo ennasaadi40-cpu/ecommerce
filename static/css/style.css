@@ -339,3 +339,16 @@ img { max-width: 100%; display: block; }
   .dropdown-cat.has-sub.open:hover .submenu { display: block; }
   .submenu-item { padding: 9px 16px; }
 }
+
+/* category quick-links (chips) on brand page + sold-out badge on cards */
+.chip-row{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:22px; }
+.chip{
+  display:inline-block; padding:8px 16px; border:1px solid var(--line); border-radius:999px;
+  background:#fff; color:var(--navy); text-decoration:none; font-size:14px; font-weight:600;
+}
+.chip:hover{ background:var(--soft); color:var(--accent); border-color:var(--accent); }
+.card-img{ position:relative; }
+.card-soldout{
+  position:absolute; top:10px; left:10px; background:#374151; color:#fff;
+  font-size:11px; font-weight:700; padding:3px 10px; border-radius:6px;
+}

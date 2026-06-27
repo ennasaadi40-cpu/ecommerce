@@ -19,12 +19,23 @@ def home(request):
 
 
 def brand_detail(request, slug):
-    """Show all top-level collections of one brand (e.g. all Apple categories)."""
+    """Show ALL parts for a brand (across every model) as product cards."""
     brand = get_object_or_404(Brand, slug=slug, is_active=True)
-    collections = brand.collections.filter(parent__isnull=True, is_active=True)
+    products = Product.objects.filter(
+        collection__brand=brand, is_active=True
+    ).order_by("collection__name", "name")
+
+    paginator = Paginator(products, 12)
+    page = request.GET.get("page")
+    page_obj = paginator.get_page(page)
+
+    # categories for the optional quick links at the top
+    categories = brand.collections.filter(parent__isnull=True, is_active=True)
+
     return render(request, "store/brand.html", {
         "brand": brand,
-        "collections": collections,
+        "page_obj": page_obj,
+        "categories": categories,
     })
 
 

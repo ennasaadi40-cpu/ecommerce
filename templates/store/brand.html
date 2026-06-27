@@ -9,17 +9,48 @@
     <strong>{{ brand.name }}</strong>
   </div>
 
-  <h2 class="section-title">{{ brand.name }}</h2>
+  <h2 class="section-title">{{ brand.name }} Parts</h2>
 
-  <ul class="cat-list">
-    {% for col in collections %}
-      <a href="{{ col.get_absolute_url }}" class="cat-row">
-        <span class="cat-name">{{ col.name }}</span>
-        <span class="cat-arrow">›</span>
+  {% if categories %}
+    <div class="chip-row">
+      {% for cat in categories %}
+        <a href="{{ cat.get_absolute_url }}" class="chip">{{ cat.name }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="grid">
+    {% for product in page_obj %}
+      <a href="{{ product.get_absolute_url }}" class="card">
+        <div class="card-img">
+          {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}<span class="ph">No image</span>{% endif %}
+          {% if not product.in_stock %}<span class="card-soldout">Sold out</span>{% endif %}
+        </div>
+        <div class="card-body">
+          <span class="card-cat">{{ product.collection.name }}</span>
+          <div class="card-name">{{ product.name }}</div>
+          <div class="card-price">
+            ${{ product.price }}
+            {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
+          </div>
+        </div>
       </a>
     {% empty %}
-      <p class="empty">No categories yet for {{ brand.name }}.</p>
+      <p class="empty">No parts added for {{ brand.name }} yet.</p>
     {% endfor %}
-  </ul>
+  </div>
+
+  {% if page_obj.has_other_pages %}
+    <div class="chip-row" style="margin-top:28px; justify-content:center;">
+      {% if page_obj.has_previous %}
+        <a class="chip" href="?page={{ page_obj.previous_page_number }}">← Prev</a>
+      {% endif %}
+      <span class="chip">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a class="chip" href="?page={{ page_obj.next_page_number }}">Next →</a>
+      {% endif %}
+    </div>
+  {% endif %}
 </section>
 {% endblock %}
