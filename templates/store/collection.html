@@ -3,7 +3,6 @@
 
 {% block content %}
 <section class="section">
-  <!-- breadcrumb: shows the path and lets you go back up -->
   <div class="crumbs">
     <a href="{% url 'store:home' %}">Home</a>
     <span>›</span>
@@ -16,54 +15,40 @@
     <strong>{{ collection.name }}</strong>
   </div>
 
-  <h2 class="section-title">{{ collection.name }}</h2>
+  <h2 class="section-title">{{ collection.name }} Parts</h2>
 
-  {% if children %}
-    <!-- This is a category (e.g. iPhone): show its models as a simple list -->
-    <ul class="cat-list">
-      {% for model in children %}
-        <a href="{{ model.get_absolute_url }}" class="cat-row">
-          <span class="cat-name">{{ model.name }}</span>
-          <span class="cat-meta">{{ model.products.count }} parts</span>
-          <span class="cat-arrow">›</span>
-        </a>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <!-- Leaf model (e.g. iPhone 17 Pro Max): show its parts -->
-    <div class="grid">
-      {% for product in page_obj %}
-        <a href="{{ product.get_absolute_url }}" class="card">
-          <div class="card-img">
-            {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
-            {% else %}<span class="ph">No image</span>{% endif %}
+  <div class="grid">
+    {% for product in page_obj %}
+      <a href="{{ product.get_absolute_url }}" class="card">
+        <div class="card-img">
+          {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}">
+          {% else %}<span class="ph">No image</span>{% endif %}
+          {% if not product.in_stock %}<span class="card-soldout">Sold out</span>{% endif %}
+        </div>
+        <div class="card-body">
+          <span class="card-cat">{{ product.collection.name }}</span>
+          <div class="card-name">{{ product.name }}</div>
+          <div class="card-price">
+            ${{ product.price }}
+            {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
           </div>
-          <div class="card-body">
-            <span class="card-cat">{{ product.get_part_type_display }}</span>
-            <div class="card-name">{{ product.name }}</div>
-            <div class="card-price">
-              ${{ product.price }}
-              {% if product.on_sale %}<span class="was">${{ product.compare_at_price }}</span>{% endif %}
-            </div>
-            {% if not product.in_stock %}<span class="badge out">Out of stock</span>{% endif %}
-          </div>
-        </a>
-      {% empty %}
-        <p class="empty">No parts added for this model yet.</p>
-      {% endfor %}
+        </div>
+      </a>
+    {% empty %}
+      <p class="empty">No parts added here yet.</p>
+    {% endfor %}
+  </div>
+
+  {% if page_obj.has_other_pages %}
+    <div class="chip-row" style="margin-top:28px; justify-content:center;">
+      {% if page_obj.has_previous %}
+        <a class="chip" href="?page={{ page_obj.previous_page_number }}">← Prev</a>
+      {% endif %}
+      <span class="chip">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+      {% if page_obj.has_next %}
+        <a class="chip" href="?page={{ page_obj.next_page_number }}">Next →</a>
+      {% endif %}
     </div>
-
-    {% if page_obj.has_other_pages %}
-      <div class="brand-row" style="margin-top:28px; justify-content:center;">
-        {% if page_obj.has_previous %}
-          <a class="brand-chip" href="?page={{ page_obj.previous_page_number }}">← Prev</a>
-        {% endif %}
-        <span class="brand-chip">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
-        {% if page_obj.has_next %}
-          <a class="brand-chip" href="?page={{ page_obj.next_page_number }}">Next →</a>
-        {% endif %}
-      </div>
-    {% endif %}
   {% endif %}
 </section>
 {% endblock %}
