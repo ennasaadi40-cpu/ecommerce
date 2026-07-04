@@ -49,9 +49,17 @@ class Command(BaseCommand):
                 # Model (child collection under the category)
                 mkey = (brand.id, category.id, model_name)
                 if mkey not in models:
-                    models[mkey], _ = Collection.objects.get_or_create(
-                        brand=brand, name=model_name, parent=category
-                    )
+                    # Match by (brand, name) regardless of parent, so a model that
+                    # already exists under another category (e.g. the seed tree's
+                    # "S Series") is reused instead of duplicated.
+                    m = Collection.objects.filter(
+                        brand=brand, name=model_name, parent__isnull=False
+                    ).first()
+                    if not m:
+                        m = Collection.objects.create(
+                            brand=brand, name=model_name, parent=category
+                        )
+                    models[mkey] = m
                 model = models[mkey]
 
                 # Product (unique by SKU); update price/name if it changed
