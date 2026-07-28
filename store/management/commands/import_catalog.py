@@ -7,7 +7,7 @@ from store.models import Brand, Collection, Product, ProductImage
 
 DEFAULT_STOCK = 10
 IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
-GALLERY_SUFFIX_RE = re.compile(r"^(?P<sku>.+)-(?P<n>\d+)$")
+GALLERY_SUFFIX_RE = re.compile(r"^(?P<sku>XLS-\d{4})-(?P<n>\d+)$")
 
 
 def build_image_index(images_dir: Path) -> dict:
