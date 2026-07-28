@@ -1,4 +1,4 @@
-﻿# Render Blueprint for RepairoX
+# Render Blueprint for RepairoX
 # Deploy: push to GitHub, then on Render: New > Blueprint > pick this repo.
 databases:
   - name: repairox-db
@@ -12,7 +12,7 @@ services:
     runtime: python
     plan: free
     branch: main
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py ensure_superuser"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py ensure_superuser && python manage.py import_catalog"
     startCommand: "gunicorn qcp_store.wsgi:application"
     envVars:
       - key: SECRET_KEY
