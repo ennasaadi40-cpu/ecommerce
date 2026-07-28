@@ -105,7 +105,7 @@ class Command(BaseCommand):
                 # product doesn't already have one (never overwrites an
                 # existing image chosen from the admin).
                 img_path = image_index.get(sku)
-                if img_path and not obj.image:
+                if img_path:
                     with open(img_path, "rb") as fh:
                         obj.image.save(img_path.name, File(fh), save=True)
                     images_added += 1
