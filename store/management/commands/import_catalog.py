@@ -1,9 +1,23 @@
 import csv
 from pathlib import Path
+from django.core.files import File
 from django.core.management.base import BaseCommand
 from store.models import Brand, Collection, Product
 
 DEFAULT_STOCK = 10
+IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
+
+
+def build_image_index(images_dir: Path) -> dict:
+    """Map SKU -> image file path by scanning store/data/images/** recursively.
+    A file is matched to a product by its filename (without extension) == SKU,
+    e.g. store/data/images/battery/XLS-0079.jpeg -> SKU 'XLS-0079'."""
+    index = {}
+    if images_dir.exists():
+        for path in images_dir.rglob("*"):
+            if path.is_file() and path.suffix.lower() in IMAGE_EXTS:
+                index[path.stem] = path
+    return index
 
 
 class Command(BaseCommand):
@@ -11,6 +25,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         csv_path = Path(__file__).resolve().parents[2] / "data" / "catalog.csv"
+        images_dir = Path(__file__).resolve().parents[2] / "data" / "images"
+        image_index = build_image_index(images_dir)
         if not csv_path.exists():
             self.stdout.write(self.style.WARNING(f"Catalog file not found: {csv_path}"))
             return
@@ -18,7 +34,7 @@ class Command(BaseCommand):
         brands = {}
         categories = {}   # (brand_id, name) -> Collection
         models = {}       # (brand_id, category_id, name) -> Collection
-        created_p = updated_p = 0
+        created_p = updated_p = images_added = 0
 
         with open(csv_path, newline="", encoding="utf-8") as f:
             for row in csv.DictReader(f):
@@ -85,7 +101,16 @@ class Command(BaseCommand):
                     if changed:
                         obj.save(); updated_p += 1
 
+                # Attach an image if we found one matching this SKU and the
+                # product doesn't already have one (never overwrites an
+                # existing image chosen from the admin).
+                img_path = image_index.get(sku)
+                if img_path and not obj.image:
+                    with open(img_path, "rb") as fh:
+                        obj.image.save(img_path.name, File(fh), save=True)
+                    images_added += 1
+
         self.stdout.write(self.style.SUCCESS(
             f"Catalog import done: {created_p} created, {updated_p} updated, "
-            f"{len(models)} models, {len(brands)} brands."
+            f"{images_added} images attached, {len(models)} models, {len(brands)} brands."
         ))
