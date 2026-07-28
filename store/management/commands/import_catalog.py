@@ -1,22 +1,38 @@
 import csv
+import re
 from pathlib import Path
 from django.core.files import File
 from django.core.management.base import BaseCommand
-from store.models import Brand, Collection, Product
+from store.models import Brand, Collection, Product, ProductImage
 
 DEFAULT_STOCK = 10
 IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp")
+GALLERY_SUFFIX_RE = re.compile(r"^(?P<sku>.+)-(?P<n>\d+)$")
 
 
 def build_image_index(images_dir: Path) -> dict:
-    """Map SKU -> image file path by scanning store/data/images/** recursively.
-    A file is matched to a product by its filename (without extension) == SKU,
-    e.g. store/data/images/battery/XLS-0079.jpeg -> SKU 'XLS-0079'."""
+    """Map SKU -> {'primary': path, 'gallery': [paths]} by scanning
+    store/data/images/** recursively.
+    - store/data/images/battery/XLS-0079.jpeg       -> primary image for XLS-0079
+    - store/data/images/backglass/XLS-0300-2.jpeg   -> extra gallery image for XLS-0300
+    """
     index = {}
-    if images_dir.exists():
-        for path in images_dir.rglob("*"):
-            if path.is_file() and path.suffix.lower() in IMAGE_EXTS:
-                index[path.stem] = path
+    if not images_dir.exists():
+        return index
+    for path in images_dir.rglob("*"):
+        if not (path.is_file() and path.suffix.lower() in IMAGE_EXTS):
+            continue
+        stem = path.stem
+        m = GALLERY_SUFFIX_RE.match(stem)
+        if m:
+            sku = m.group("sku")
+            index.setdefault(sku, {"primary": None, "gallery": []})
+            index[sku]["gallery"].append(path)
+        else:
+            index.setdefault(stem, {"primary": None, "gallery": []})
+            index[stem]["primary"] = path
+    for entry in index.values():
+        entry["gallery"].sort(key=lambda p: p.name)
     return index
 
 
@@ -34,7 +50,7 @@ class Command(BaseCommand):
         brands = {}
         categories = {}   # (brand_id, name) -> Collection
         models = {}       # (brand_id, category_id, name) -> Collection
-        created_p = updated_p = images_added = 0
+        created_p = updated_p = images_added = gallery_added = 0
 
         with open(csv_path, newline="", encoding="utf-8") as f:
             for row in csv.DictReader(f):
@@ -101,16 +117,30 @@ class Command(BaseCommand):
                     if changed:
                         obj.save(); updated_p += 1
 
-                # Attach an image if we found one matching this SKU and the
-                # product doesn't already have one (never overwrites an
-                # existing image chosen from the admin).
-                img_path = image_index.get(sku)
-                if img_path:
+                # Attach the primary image if we found one for this SKU.
+                entry = image_index.get(sku)
+                if entry and entry["primary"]:
+                    img_path = entry["primary"]
                     with open(img_path, "rb") as fh:
                         obj.image.save(img_path.name, File(fh), save=True)
                     images_added += 1
 
+                # Attach any extra gallery images (SKU-2, SKU-3, ...), skipping
+                # ones already saved for this product (matched by filename).
+                if entry and entry["gallery"]:
+                    existing_names = set(
+                        obj.images.values_list("image", flat=True)
+                    )
+                    for gpath in entry["gallery"]:
+                        if any(gpath.name in n for n in existing_names):
+                            continue
+                        with open(gpath, "rb") as fh:
+                            pi = ProductImage(product=obj)
+                            pi.image.save(gpath.name, File(fh), save=True)
+                        gallery_added += 1
+
         self.stdout.write(self.style.SUCCESS(
             f"Catalog import done: {created_p} created, {updated_p} updated, "
-            f"{images_added} images attached, {len(models)} models, {len(brands)} brands."
+            f"{images_added} images attached, {gallery_added} gallery images added, "
+            f"{len(models)} models, {len(brands)} brands."
         ))
