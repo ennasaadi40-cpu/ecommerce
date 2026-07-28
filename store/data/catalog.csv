@@ -16,28 +16,28 @@ Apple,iPhone,iPhone 13 Mini,screen,iPhone 13 Mini Screen,20.0,XLS-0014
 Apple,iPhone,iPhone 13 Pro,screen,iPhone 13 Pro Screen,28.0,XLS-0015
 Apple,iPhone,iPhone 13 Pro Max,screen,iPhone 13 Pro Max Screen,30.0,XLS-0016
 Apple,iPhone,iPhone 13 Pro Max,screen,iPhone 13 Pro Max Screen (Soft Oled),45.0,XLS-0017
-Apple,iPhone,iPhone 14,screen,iPhone 14 Screen,23.0,XLS-0018
+Apple,iPhone,iPhone 14,screen,iPhone 14 Screen,22.0,XLS-0018
 Apple,iPhone,iPhone 14 Pro,screen,iPhone 14 Pro Screen,30.0,XLS-0019
-Apple,iPhone,iPhone 14 Pro,screen,iPhone 14 Pro Screen (Soft Oled),80.0,XLS-0020
+Apple,iPhone,iPhone 14 Pro,screen,iPhone 14 Pro Screen (Soft Oled),60.0,XLS-0020
 Apple,iPhone,iPhone 14 Pro Max,screen,iPhone 14 Pro Max Screen,33.0,XLS-0021
-Apple,iPhone,iPhone 14 Pro Max,screen,iPhone 14 Pro Max Screen (Oem),70.0,XLS-0022
+Apple,iPhone,iPhone 14 Pro Max,screen,iPhone 14 Pro Max Screen (Oem),55.0,XLS-0022
 Apple,iPhone,iPhone 14 Plus,screen,iPhone 14 Plus Screen,27.0,XLS-0023
-Apple,iPhone,iPhone 15,screen,iPhone 15 Screen,28.0,XLS-0024
-Apple,iPhone,iPhone 15 Pro,screen,iPhone 15 Pro Screen,32.0,XLS-0025
-Apple,iPhone,iPhone 15 Pro,screen,iPhone 15 Pro Screen (Oem),85.0,XLS-0026
-Apple,iPhone,iPhone 15 Pro Max,screen,iPhone 15 Pro Max Screen,36.0,XLS-0027
-Apple,iPhone,iPhone 15 Pro Max,screen,iPhone 15 Pro Max Screen (Oem),85.0,XLS-0028
-Apple,iPhone,iPhone 15 Plus,screen,iPhone 15 Plus Screen,32.0,XLS-0029
-Apple,iPhone,iPhone 16,screen,iPhone 16 Screen,40.0,XLS-0030
-Apple,iPhone,iPhone 16 Pro,screen,iPhone 16 Pro Screen,60.0,XLS-0031
-Apple,iPhone,iPhone 16 Pro,screen,iPhone 16 Pro Screen (Oem),90.0,XLS-0032
-Apple,iPhone,iPhone 16 Pro Max,screen,iPhone 16 Pro Max Screen,70.0,XLS-0033
-Apple,iPhone,iPhone 16 Pro Max,screen,iPhone 16 Pro Max Screen (Soft Oled),90.0,XLS-0034
+Apple,iPhone,iPhone 15,screen,iPhone 15 Screen,26.0,XLS-0024
+Apple,iPhone,iPhone 15 Pro,screen,iPhone 15 Pro Screen,30.0,XLS-0025
+Apple,iPhone,iPhone 15 Pro,screen,iPhone 15 Pro Screen (Oem),60.0,XLS-0026
+Apple,iPhone,iPhone 15 Pro Max,screen,iPhone 15 Pro Max Screen,35.0,XLS-0027
+Apple,iPhone,iPhone 15 Pro Max,screen,iPhone 15 Pro Max Screen (Oem),60.0,XLS-0028
+Apple,iPhone,iPhone 15 Plus,screen,iPhone 15 Plus Screen,30.0,XLS-0029
+Apple,iPhone,iPhone 16,screen,iPhone 16 Screen,28.0,XLS-0030
+Apple,iPhone,iPhone 16 Pro,screen,iPhone 16 Pro Screen,43.0,XLS-0031
+Apple,iPhone,iPhone 16 Pro,screen,iPhone 16 Pro Screen (Oem),77.0,XLS-0032
+Apple,iPhone,iPhone 16 Pro Max,screen,iPhone 16 Pro Max Screen,43.0,XLS-0033
+Apple,iPhone,iPhone 16 Pro Max,screen,iPhone 16 Pro Max Screen (Soft Oled),77.0,XLS-0034
 Apple,iPhone,iPhone 16e,screen,iPhone 16e Screen,30.0,XLS-0035
-Apple,iPhone,iPhone 16 Plus,screen,iPhone 16 Plus Screen,38.0,XLS-0036
+Apple,iPhone,iPhone 16 Plus,screen,iPhone 16 Plus Screen,35.0,XLS-0036
 Apple,iPhone,iPhone 17,screen,iPhone 17 Screen,55.0,XLS-0037
-Apple,iPhone,iPhone 17 Pro,screen,iPhone 17 Pro Screen,55.0,XLS-0038
-Apple,iPhone,iPhone 17 Pro Max,screen,iPhone 17 Pro Max Screen,55.0,XLS-0039
+Apple,iPhone,iPhone 17 Pro,screen,iPhone 17 Pro Screen,50.0,XLS-0038
+Apple,iPhone,iPhone 17 Pro Max,screen,iPhone 17 Pro Max Screen,50.0,XLS-0039
 Samsung,Galaxy,Galaxy A03,screen,Galaxy A03 Screen,14.0,XLS-0040
 Samsung,Galaxy,Galaxy A02,screen,Galaxy A02 Screen,14.0,XLS-0041
 Samsung,Galaxy,Galaxy A03,screen,Galaxy A03 Screen,14.0,XLS-0042
@@ -409,3 +409,20 @@ Apple,iPhone,iPhone 17 Pro,back_glass,iPhone 17 Pro Back Glass - Deep Blue,6.0,X
 Apple,iPhone,iPhone 17 Pro Max,back_glass,iPhone 17 Pro Max Back Glass - Cosmic Orange,6.0,XLS-0408
 Apple,iPhone,iPhone 17 Pro Max,back_glass,iPhone 17 Pro Max Back Glass - Silver,6.0,XLS-0409
 Apple,iPhone,iPhone 17 Pro Max,back_glass,iPhone 17 Pro Max Back Glass - Deep Blue,6.0,XLS-0410
+Apple,iPhone,iPhone 17 Pro Max,screen,RPX SOFT OLED Assembly For iPhone 17 Pro Max (120Hz /1:1 Orginal Size / SOFT OLED,128.0,XLS-0411
+Apple,iPhone,iPhone 17 Pro,screen,RPX SOFT OLED Assembly For iPhone 17 Pro (120Hz /1:1 Orginal Size / SOFT OLED,95.0,XLS-0412
+Apple,iPhone,iPhone 17,screen,RPX SOFT OLED Assembly For iPhone 17 (120Hz /1:1 Orginal Size / SOFT OLED,87.0,XLS-0413
+Apple,iPhone,iPhone 16 Plus,screen,RPX SOFT OLED Assembly For iPhone 16 Plus (120Hz /1:1 Orginal Size / SOFT OLED,56.0,XLS-0414
+Apple,iPhone,iPhone 16,screen,RPX SOFT OLED Assembly For iPhone 16 (120Hz /1:1 Orginal Size / SOFT OLED,50.0,XLS-0415
+Apple,iPhone,iPhone 15 Plus,screen,RPX SOFT OLED Assembly For iPhone 15 Plus (120Hz /1:1 Orginal Size / SOFT OLED,60.0,XLS-0416
+Apple,iPhone,iPhone 15,screen,RPX SOFT OLED Assembly For iPhone 15 (120Hz /1:1 Orginal Size / SOFT OLED,50.0,XLS-0417
+Apple,iPhone,iPhone 14 Plus,screen,RPX SOFT OLED Assembly For iPhone 14 Plus  (120Hz /1:1 Orginal Size / SOFT OLED,46.0,XLS-0418
+Apple,iPhone,iPhone 14,screen,RPX SOFT OLED Assembly For iPhone 14 (120Hz /1:1 Orginal Size / SOFT OLED,48.0,XLS-0419
+Apple,iPhone,iPhone 13 Pro,screen,RPX SOFT OLED Assembly For iPhone 13 Pro  (120Hz /1:1 Orginal Size / SOFT OLED,53.0,XLS-0420
+Apple,iPhone,iPhone 13,screen,RPX SOFT OLED Assembly For iPhone 13  (120Hz /1:1 Orginal Size / SOFT OLED,48.0,XLS-0421
+Apple,iPhone,iPhone 8 Plus,screen,LCD Assembly  For iPhone 8 Plus  (Aftermarket Plus:RPX Incell) (Black),15.0,XLS-0422
+Samsung,Galaxy,Galaxy A13s,screen,LCD  For Samsung Galaxy A13 5G (A13 2022) With Frame (ORGINAL OEM),14.0,XLS-0423
+Samsung,Galaxy,Galaxy A04s,screen,LCD  For Samsung Galaxy A04S (A047/2022) With Frame (ORGINAL OEM),14.0,XLS-0424
+Samsung,Galaxy,Galaxy A03s,screen,LCD  For Samsung Galaxy A03S (A037F / A037G / 2021) With Frame (ORGINAL OEM),14.0,XLS-0425
+Samsung,Galaxy,Galaxy A03s,screen,LCD  For Samsung Galaxy A03S (A037U) With Frame (ORGINAL OEM),14.0,XLS-0426
+Samsung,Galaxy,Galaxy A02s,screen,LCD  For Samsung Galaxy A02S (A025) With Frame (ORGINAL OEM),14.0,XLS-0427
