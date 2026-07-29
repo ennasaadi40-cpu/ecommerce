@@ -12,7 +12,7 @@ services:
     runtime: python
     plan: free
     branch: main
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py ensure_superuser && python manage.py import_catalog"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate && python manage.py ensure_superuser && python manage.py import_catalog && python manage.py prune_catalog"
     startCommand: "gunicorn qcp_store.wsgi:application"
     envVars:
       - key: SECRET_KEY
