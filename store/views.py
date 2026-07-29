@@ -8,9 +8,59 @@ from .cart import Cart
 from .notifications import send_order_notification
 
 
+class ProductGroup:
+    """A lightweight, non-DB stand-in for a card that represents several
+    color-variant Products (e.g. 'iPhone 15 Back Glass - Green/White/Black')
+    as ONE card with a color swatch picker, instead of repeating a near
+    identical card once per color."""
+    is_group = True
+
+    def __init__(self, variants):
+        self.variants = sorted(variants, key=lambda p: p.price)
+        rep = self.variants[0]
+        self.representative = rep
+        self.name = rep.variant_base_name
+        self.price = rep.price
+        self.collection = rep.collection
+        self.in_stock = any(v.in_stock for v in self.variants)
+        self.on_sale = rep.on_sale
+        self.compare_at_price = rep.compare_at_price
+
+    @property
+    def image(self):
+        return self.representative.image
+
+    def get_absolute_url(self):
+        return self.representative.get_absolute_url()
+
+
+def group_for_display(products):
+    """Collapse color-variant Products into ProductGroup cards while leaving
+    every other product untouched. Preserves the original ordering."""
+    variants_by_key = {}
+    for p in products:
+        if p.variant_color:
+            key = (p.collection_id, p.part_type, p.variant_base_name)
+            variants_by_key.setdefault(key, []).append(p)
+
+    result = []
+    seen_keys = set()
+    for p in products:
+        if not p.variant_color:
+            result.append(p)
+            continue
+        key = (p.collection_id, p.part_type, p.variant_base_name)
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
+        group = variants_by_key[key]
+        result.append(ProductGroup(group) if len(group) > 1 else group[0])
+    return result
+
+
 def home(request):
     """Landing page: hero banner, featured products, services, about."""
-    featured = Product.objects.filter(is_active=True)[:8]
+    featured = group_for_display(Product.objects.filter(is_active=True)[:16])[:8]
     brands = Brand.objects.filter(is_active=True)
     return render(request, "store/home.html", {
         "featured": featured,
@@ -25,7 +75,8 @@ def brand_detail(request, slug):
         collection__brand=brand, is_active=True
     ).order_by("collection__name", "name")
 
-    paginator = Paginator(products, 12)
+    grouped = group_for_display(products)
+    paginator = Paginator(grouped, 12)
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
 
@@ -53,7 +104,8 @@ def collection_detail(request, slug):
     else:
         products = collection.products.filter(is_active=True)
 
-    paginator = Paginator(products, 12)
+    grouped = group_for_display(products)
+    paginator = Paginator(grouped, 12)
     page = request.GET.get("page")
     page_obj = paginator.get_page(page)
 
@@ -65,13 +117,17 @@ def collection_detail(request, slug):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, is_active=True)
+    color_variants = product.sibling_variants().order_by("name") if product.variant_color else Product.objects.none()
+    variant_ids = list(color_variants.values_list("id", flat=True))
     related = (
         Product.objects.filter(collection=product.collection, is_active=True)
-        .exclude(id=product.id)[:4]
+        .exclude(id=product.id)
+        .exclude(id__in=variant_ids)[:4]
     )
     return render(request, "store/product_detail.html", {
         "product": product,
         "related": related,
+        "color_variants": color_variants,
     })
 
 
@@ -84,6 +140,7 @@ def search(request):
             Q(collection__name__icontains=query),
             is_active=True,
         )
+    results = group_for_display(results)
     return render(request, "store/search.html", {"query": query, "results": results})
 
 

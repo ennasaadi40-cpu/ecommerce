@@ -369,3 +369,27 @@ img { max-width: 100%; display: block; }
   margin:0 14px 14px; width:calc(100% - 28px);
   background:#cfd3e0; color:#fff; cursor:not-allowed;
 }
+
+/* ===== Color swatches on a grouped (multi-color) product card ===== */
+.card-swatches{
+  display:flex; flex-wrap:wrap; gap:6px; padding:0 14px 10px;
+}
+.swatch{
+  width:20px; height:20px; border-radius:50%;
+  border:1px solid rgba(0,0,0,.15); box-shadow:0 0 0 1px #fff inset;
+  display:inline-block; text-decoration:none;
+  transition:transform .12s ease;
+}
+.swatch:hover{ transform:scale(1.15); }
+
+/* ===== Color swatches on the product detail page ===== */
+.pd-colors{ margin:14px 0; }
+.pd-colors-label{ font-size:13px; font-weight:600; color:#555; margin-bottom:6px; }
+.pd-color-row{ display:flex; flex-wrap:wrap; gap:8px; }
+.pd-color-swatch{
+  width:34px; height:34px; border-radius:50%;
+  border:2px solid transparent; box-shadow:0 0 0 1px rgba(0,0,0,.15) inset;
+  display:inline-block; text-decoration:none; transition:transform .12s ease;
+}
+.pd-color-swatch:hover{ transform:scale(1.1); }
+.pd-color-swatch.is-current{ border-color:var(--accent); }

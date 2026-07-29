@@ -47,6 +47,20 @@
       SKU: {{ product.sku }} &nbsp;•&nbsp; {{ product.get_part_type_display }}
     </div>
 
+    {% if color_variants %}
+      <div class="pd-colors">
+        <div class="pd-colors-label">Color: {{ product.variant_color }}</div>
+        <div class="pd-color-row">
+          <a href="{{ product.get_absolute_url }}" class="pd-color-swatch is-current"
+             title="{{ product.variant_color }}" style="background:{{ product.swatch_hex }}"></a>
+          {% for v in color_variants %}
+            <a href="{{ v.get_absolute_url }}" class="pd-color-swatch"
+               title="{{ v.variant_color }}" style="background:{{ v.swatch_hex }}"></a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
     {% if product.description %}<p class="pd-desc">{{ product.description }}</p>{% endif %}
 
     {% if product.in_stock %}

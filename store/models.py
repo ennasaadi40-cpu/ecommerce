@@ -124,6 +124,65 @@ class Product(models.Model):
                 imgs.append(extra.image.url)
         return imgs
 
+    # ---- Color variants (e.g. "iPhone 15 Back Glass - Green") ----
+    # Products whose name ends in " - <Color>" are treated as color variants
+    # of the same underlying part, so listing pages can group them into one
+    # card with swatches instead of repeating a near-identical card per color.
+
+    @property
+    def variant_base_name(self):
+        if " - " in self.name:
+            return self.name.rsplit(" - ", 1)[0].strip()
+        return self.name
+
+    @property
+    def variant_color(self):
+        if " - " in self.name:
+            return self.name.rsplit(" - ", 1)[1].strip()
+        return None
+
+    def sibling_variants(self):
+        """Other color variants of this same part (same collection, part type,
+        and base name), used to render a color swatch picker."""
+        if not self.variant_color:
+            return Product.objects.none()
+        return Product.objects.filter(
+            collection_id=self.collection_id,
+            part_type=self.part_type,
+            is_active=True,
+            name__startswith=f"{self.variant_base_name} - ",
+        ).exclude(id=self.id)
+
+    @property
+    def swatch_hex(self):
+        """Best-effort hex color for a small swatch dot, guessed from the
+        color name. Falls back to a neutral gray if nothing matches."""
+        if not self.variant_color:
+            return "#cccccc"
+        c = self.variant_color.lower()
+        table = [
+            ("rose gold", "#e8c5b5"), ("pacific blue", "#3c4d5c"),
+            ("sierra blue", "#a3bcd4"), ("alpine green", "#4a5d4e"),
+            ("space black", "#3b3a3e"), ("deep purple", "#54495e"),
+            ("midnight", "#1e2230"), ("starlight", "#f0e6d3"),
+            ("cosmic orange", "#c96a3e"), ("deep blue", "#33475b"),
+            ("mist blue", "#a9c0cf"), ("natural titanium", "#8f8a80"),
+            ("black titanium", "#3a3a3a"), ("white titanium", "#e8e4da"),
+            ("desert titanium", "#a08a6a"), ("blue titanium", "#4c5b66"),
+            ("ultramarine", "#3f4d92"), ("graphite", "#54524f"),
+            ("gold", "#d4af6a"), ("silver", "#e4e4e4"),
+            ("black", "#1c1c1e"), ("white", "#f5f5f0"),
+            ("blue", "#3b6ea5"), ("green", "#4f6f52"),
+            ("red", "#a5312f"), ("yellow", "#e0c341"),
+            ("orange", "#d2691e"), ("purple", "#7a5c96"),
+            ("pink", "#e8b4bc"), ("teal", "#2e7d78"),
+            ("sage", "#9caf88"), ("lavender", "#b9a6d6"),
+        ]
+        for key, hexval in table:
+            if key in c:
+                return hexval
+        return "#cccccc"
+
 
 class ProductImage(models.Model):
     """Extra photos for a product (gallery)."""

@@ -1,4 +1,6 @@
-{% comment %}Reusable product card with a direct Add-to-cart button.{% endcomment %}
+{% comment %}Reusable product card with a direct Add-to-cart button.
+Handles two shapes: a normal Product, or a ProductGroup (several color
+variants of the same part collapsed into one card with swatches).{% endcomment %}
 <div class="card">
   <a href="{{ product.get_absolute_url }}" class="card-link">
     <div class="card-img">
@@ -15,7 +17,15 @@
       </div>
     </div>
   </a>
-  {% if product.in_stock %}
+  {% if product.is_group %}
+    <div class="card-swatches">
+      {% for v in product.variants %}
+        <a href="{{ v.get_absolute_url }}" class="swatch" title="{{ v.variant_color }}"
+           style="background:{{ v.swatch_hex }}"></a>
+      {% endfor %}
+    </div>
+    <a href="{{ product.get_absolute_url }}" class="btn-cart">Choose color</a>
+  {% elif product.in_stock %}
     <form action="{% url 'store:cart_add' product.id %}" method="post" class="card-cart">
       {% csrf_token %}
       <input type="hidden" name="quantity" value="1">
