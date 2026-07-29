@@ -3,27 +3,15 @@
 
 {% block content %}
 <div class="pd">
-  <!-- Gallery: big image + thumbnails (like the reference site) -->
+  <!-- Main product image (color switching now happens via the swatches below) -->
   <div class="pd-gallery">
-    {% with imgs=product.gallery %}
-      {% if imgs %}
-        <div class="pd-main">
-          <img id="pdMainImg" src="{{ imgs.0 }}" alt="{{ product.name }}">
-        </div>
-        {% if imgs|length > 1 %}
-          <div class="pd-thumbs">
-            {% for url in imgs %}
-              <button type="button" class="pd-thumb {% if forloop.first %}is-active{% endif %}"
-                      onclick="pdSwap(this, '{{ url }}')">
-                <img src="{{ url }}" alt="{{ product.name }} {{ forloop.counter }}">
-              </button>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% else %}
-        <div class="pd-main"><span class="ph">No image</span></div>
-      {% endif %}
-    {% endwith %}
+    {% if product.image %}
+      <div class="pd-main">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+      </div>
+    {% else %}
+      <div class="pd-main"><span class="ph">No image</span></div>
+    {% endif %}
   </div>
 
   <!-- Product info -->
@@ -94,12 +82,4 @@
   </div>
 </section>
 {% endif %}
-
-<script>
-  function pdSwap(btn, url){
-    document.getElementById('pdMainImg').src = url;
-    document.querySelectorAll('.pd-thumb').forEach(function(t){ t.classList.remove('is-active'); });
-    btn.classList.add('is-active');
-  }
-</script>
 {% endblock %}
