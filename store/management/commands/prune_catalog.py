@@ -1,6 +1,7 @@
 import csv
 from pathlib import Path
 from django.core.management.base import BaseCommand
+from django.db.models import ProtectedError
 from store.models import Product, Collection
 
 
@@ -16,6 +17,10 @@ class Command(BaseCommand):
         python manage.py prune_catalog            # preview only (safe)
         python manage.py prune_catalog --apply     # actually deletes
 
+    A product that has ever been ordered can't be safely deleted (it would
+    break that order's history), so those are DEACTIVATED instead (hidden
+    from the storefront, kept in the database) rather than removed.
+
     After deleting products, it also removes any model/category Collection
     that is left completely empty as a result (no products, no sub-models).
     """
@@ -24,7 +29,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "--apply", action="store_true",
-            help="Actually delete. Without this flag, only a preview is printed.",
+            help="Actually delete/deactivate. Without this flag, only a preview is printed.",
         )
 
     def handle(self, *args, **options):
@@ -36,10 +41,12 @@ class Command(BaseCommand):
         with open(csv_path, newline="", encoding="utf-8") as f:
             catalog_skus = {row["sku"].strip() for row in csv.DictReader(f)}
 
-        extra_products = Product.objects.exclude(sku__in=catalog_skus).order_by(
-            "collection__brand__name", "collection__name", "name"
+        extra_products = list(
+            Product.objects.exclude(sku__in=catalog_skus).order_by(
+                "collection__brand__name", "collection__name", "name"
+            )
         )
-        count = extra_products.count()
+        count = len(extra_products)
 
         if count == 0:
             self.stdout.write(self.style.SUCCESS(
@@ -62,7 +69,21 @@ class Command(BaseCommand):
             ))
             return
 
-        deleted_count, _ = extra_products.delete()
+        deleted = 0
+        deactivated = 0
+        for p in extra_products:
+            try:
+                p.delete()
+                deleted += 1
+            except ProtectedError:
+                # Has real order history behind it — hide it instead of
+                # breaking that order's record.
+                p.is_active = False
+                p.save(update_fields=["is_active"])
+                deactivated += 1
+                self.stdout.write(self.style.WARNING(
+                    f"  [{p.sku}] has past order(s) attached - deactivated instead of deleted."
+                ))
 
         removed_collections = 0
         changed = True
@@ -75,5 +96,6 @@ class Command(BaseCommand):
                     changed = True
 
         self.stdout.write(self.style.SUCCESS(
-            f"Deleted {count} product(s) and {removed_collections} now-empty collection(s)."
+            f"Deleted {deleted} product(s), deactivated {deactivated} product(s) with order "
+            f"history, and removed {removed_collections} now-empty collection(s)."
         ))
